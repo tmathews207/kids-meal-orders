@@ -1,0 +1,58 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Parents: Google sign-in restricted to an allowlist (kept in sync with
+    // src/authConfig.js -- update both places when adding/removing a parent).
+    function isParent() {
+      return request.auth != null &&
+        request.auth.token.firebase.sign_in_provider == 'google.com' &&
+        request.auth.token.email.lower() in [
+          'tmathews207@gmail.com'
+        ];
+    }
+
+    // Kids: signed in anonymously after entering their username + PIN
+    // client-side. Any signed-in user (parent or kid) counts as "known".
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Kid profiles (name, PIN, photo permission). Any signed-in family
+    // member can read them (needed for the PIN-login screen to check a
+    // PIN and for the dashboard to show names); only parents can write.
+    match /kids/{kidId} {
+      allow read: if isSignedIn();
+      allow write: if isParent();
+    }
+
+    // Item library (name, category, photo). Read by anyone signed in
+    // (kids need it to render menus); only parents curate it.
+    match /libraryItems/{itemId} {
+      allow read: if isSignedIn();
+      allow write: if isParent();
+    }
+
+    // Menus. Read by anyone signed in; only parents create/edit/close them.
+    match /menus/{menuId} {
+      allow read: if isSignedIn();
+      allow write: if isParent();
+    }
+
+    // Orders. Doc id is "{menuId}_{kidId}" so a kid can only write their
+    // own order; parents can read/write all of them (dashboard).
+    match /orders/{orderId} {
+      allow read: if isSignedIn();
+      allow create, update: if isParent() ||
+        (isSignedIn() && orderId == request.resource.data.menuId + '_' + request.resource.data.kidId);
+      allow delete: if isParent();
+    }
+
+    // Meal history is intentionally public (no login) for the family
+    // history page, but only parents/kids (via the app) ever write it.
+    match /mealHistory/{entryId} {
+      allow read: if true;
+      allow write: if isSignedIn();
+    }
+  }
+}
