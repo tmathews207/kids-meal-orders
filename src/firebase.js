@@ -6,15 +6,13 @@ import {
 } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
 
-// TODO: replace with your new Firebase project's config (Project settings ->
-// General -> "Your apps" -> Web app). See SETUP.md.
 const firebaseConfig = {
-  apiKey: 'REPLACE_ME',
-  authDomain: 'REPLACE_ME.firebaseapp.com',
-  projectId: 'REPLACE_ME',
-  storageBucket: 'REPLACE_ME.firebasestorage.app',
-  messagingSenderId: 'REPLACE_ME',
-  appId: 'REPLACE_ME',
+  apiKey: 'AIzaSyBTo9dy9krR3NnB5YcZeF-Pt4H-b-tbGX4',
+  authDomain: 'kids-meal-orders.firebaseapp.com',
+  projectId: 'kids-meal-orders',
+  storageBucket: 'kids-meal-orders.firebasestorage.app',
+  messagingSenderId: '170580551119',
+  appId: '1:170580551119:web:6bf489aebf8c6308cedeba',
 }
 
 const app = initializeApp(firebaseConfig)
