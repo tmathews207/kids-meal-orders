@@ -3,5 +3,5 @@
 // Add or remove emails here to change who has parent access.
 export const ALLOWED_PARENT_EMAILS = [
   'tmathews207@gmail.com',
-  // 'REPLACE_ME_WITH_SPOUSE_EMAIL@gmail.com',
+  'samathews17@gmail.com',
 ].map(e => e.toLowerCase())
