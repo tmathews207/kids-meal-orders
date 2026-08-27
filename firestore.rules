@@ -13,8 +13,9 @@ service cloud.firestore {
         ];
     }
 
-    // Kids: signed in anonymously after entering their username + PIN
-    // client-side. Any signed-in user (parent or kid) counts as "known".
+    // Kids: signed in anonymously after picking their name and entering
+    // their PIN client-side. Any signed-in user (parent or kid) counts as
+    // "known".
     function isSignedIn() {
       return request.auth != null;
     }

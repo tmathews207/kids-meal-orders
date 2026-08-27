@@ -44,7 +44,7 @@ npm run dev
 
 Once deployed with real Firebase/Cloudinary config:
 1. Open the app, choose **I'm a Parent**, sign in with Google.
-2. Go to **Kids** and add a profile for each kid (name, username, 4-digit PIN).
+2. Go to **Kids** and add a profile for each kid (name, 4-digit PIN).
 3. Go to **Library** and add food items with photos and categories.
 4. Go to **Menu** to build and open your first menu.
 

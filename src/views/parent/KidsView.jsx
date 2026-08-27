@@ -6,21 +6,18 @@ const COLORS = ['#E85D2C', '#3B82C4', '#4CAF7D', '#B565D8', '#E0A72E']
 export default function KidsView() {
   const { kids, addKid, updateKid, removeKid } = useData()
   const [name, setName] = useState('')
-  const [username, setUsername] = useState('')
   const [pin, setPin] = useState('')
 
   async function handleAdd(e) {
     e.preventDefault()
-    if (!name.trim() || !username.trim() || pin.length !== 4) return
+    if (!name.trim() || pin.length !== 4) return
     await addKid({
       name: name.trim(),
-      username: username.trim().toLowerCase(),
       pin,
       color: COLORS[kids.length % COLORS.length],
       photosEnabled: true,
     })
     setName('')
-    setUsername('')
     setPin('')
   }
 
@@ -33,10 +30,6 @@ export default function KidsView() {
           <input value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Ava" />
         </label>
         <label className="field">
-          <span>Username (what they tap to log in)</span>
-          <input value={username} onChange={e => setUsername(e.target.value)} placeholder="e.g. ava" />
-        </label>
-        <label className="field">
           <span>4-digit PIN</span>
           <input
             value={pin}
@@ -45,7 +38,7 @@ export default function KidsView() {
             placeholder="1234"
           />
         </label>
-        <button className="btn-primary" type="submit" disabled={!name.trim() || !username.trim() || pin.length !== 4}>
+        <button className="btn-primary" type="submit" disabled={!name.trim() || pin.length !== 4}>
           Add Kid
         </button>
       </form>
@@ -59,11 +52,6 @@ export default function KidsView() {
             <div className="kid-row-fields">
               <input value={kid.name} onChange={e => updateKid(kid.id, { name: e.target.value })} />
               <div className="kid-row-sub">
-                <input
-                  value={kid.username}
-                  onChange={e => updateKid(kid.id, { username: e.target.value.toLowerCase() })}
-                  placeholder="username"
-                />
                 <input
                   value={kid.pin}
                   onChange={e => updateKid(kid.id, { pin: e.target.value.replace(/\D/g, '').slice(0, 4) })}
