@@ -56,7 +56,7 @@ export default function LibraryView() {
             photoUrl={photo?.url}
             onUploaded={setPhoto}
             onRemove={() => setPhoto(null)}
-            capture="environment"
+            allowUrlInput
           />
         </label>
         <button className="btn-primary" type="submit" disabled={!name.trim()}>Add to Library</button>
@@ -69,33 +69,37 @@ export default function LibraryView() {
             <div className="library-list">
               {items.map(item => (
                 <div key={item.id} className="library-row card">
-                  {item.photoUrl ? (
-                    <img src={item.photoUrl} alt="" className="library-row-photo" />
-                  ) : (
-                    <div className="library-row-photo library-row-photo-empty" />
-                  )}
-                  <input
-                    className="library-row-name"
-                    value={item.name}
-                    onChange={e => updateLibraryItem(item.id, { name: e.target.value })}
+                  <div className="library-row-top">
+                    <input
+                      className="library-row-name"
+                      value={item.name}
+                      onChange={e => updateLibraryItem(item.id, { name: e.target.value })}
+                    />
+                    <select
+                      value={item.category}
+                      onChange={e => updateLibraryItem(item.id, { category: e.target.value })}
+                    >
+                      {ITEM_CATEGORIES.map(c => (
+                        <option key={c} value={c}>{ITEM_CATEGORY_LABELS[c]}</option>
+                      ))}
+                    </select>
+                    <button
+                      type="button"
+                      className="btn-ghost btn-sm btn-danger"
+                      onClick={() => {
+                        if (confirm(`Remove "${item.name}" from the library?`)) removeLibraryItem(item.id)
+                      }}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                  <PhotoUploader
+                    folder={CLOUDINARY_LIBRARY_FOLDER}
+                    photoUrl={item.photoUrl}
+                    onUploaded={({ url, publicId }) => updateLibraryItem(item.id, { photoUrl: url, photoPublicId: publicId })}
+                    onRemove={() => updateLibraryItem(item.id, { photoUrl: '', photoPublicId: '' })}
+                    allowUrlInput
                   />
-                  <select
-                    value={item.category}
-                    onChange={e => updateLibraryItem(item.id, { category: e.target.value })}
-                  >
-                    {ITEM_CATEGORIES.map(c => (
-                      <option key={c} value={c}>{ITEM_CATEGORY_LABELS[c]}</option>
-                    ))}
-                  </select>
-                  <button
-                    type="button"
-                    className="btn-ghost btn-sm btn-danger"
-                    onClick={() => {
-                      if (confirm(`Remove "${item.name}" from the library?`)) removeLibraryItem(item.id)
-                    }}
-                  >
-                    Remove
-                  </button>
                 </div>
               ))}
             </div>
