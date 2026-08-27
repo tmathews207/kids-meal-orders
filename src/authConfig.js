@@ -2,6 +2,6 @@
 // the item library, kid profiles, and order status.
 // Add or remove emails here to change who has parent access.
 export const ALLOWED_PARENT_EMAILS = [
-  'tmathews207@gmail.com',
+  'timmathewsdata@gmail.com',
   'samathews17@gmail.com',
 ].map(e => e.toLowerCase())

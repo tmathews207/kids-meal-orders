@@ -8,7 +8,7 @@ service cloud.firestore {
       return request.auth != null &&
         request.auth.token.firebase.sign_in_provider == 'google.com' &&
         request.auth.token.email.lower() in [
-          'tmathews207@gmail.com',
+          'timmathewsdata@gmail.com',
           'samathews17@gmail.com'
         ];
     }
