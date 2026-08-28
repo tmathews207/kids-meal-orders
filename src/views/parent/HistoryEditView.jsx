@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useData } from '../../context/DataContext'
 import HistoryOrderSummary from '../../components/HistoryOrderSummary'
 import PhotoUploader from '../../components/PhotoUploader'
@@ -35,22 +36,24 @@ export default function HistoryEditView() {
 
   const sorted = [...mealHistory].sort((a, b) => toMillis(b.createdAt) - toMillis(a.createdAt))
 
-  if (sorted.length === 0) {
-    return (
-      <div className="view-padded">
-        <p className="empty-note">No served meals yet.</p>
-      </div>
-    )
-  }
-
   function handleDeleteEntry(entry) {
     if (confirm(`Delete this ${MEAL_TYPE_LABELS[entry.mealType] || entry.mealType} entry from history? This can't be undone.`)) {
       deleteMealHistoryEntry(entry.id)
     }
   }
 
+  if (sorted.length === 0) {
+    return (
+      <div className="view-padded">
+        <Link to="/history" className="btn-ghost btn-sm">View Public History →</Link>
+        <p className="empty-note">No served meals yet.</p>
+      </div>
+    )
+  }
+
   return (
     <div className="view-padded">
+      <Link to="/history" className="btn-ghost btn-sm">View Public History →</Link>
       {sorted.map(entry => (
         <div key={entry.id} className="card history-entry">
           <div className="history-entry-head">
