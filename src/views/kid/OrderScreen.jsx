@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { useData } from '../../context/DataContext'
 import CountdownTimer from '../../components/CountdownTimer'
 import SectionPicker from '../../components/SectionPicker'
@@ -26,6 +26,7 @@ export default function OrderScreen({ menu, kid }) {
       : emptySelections()
   )
   const [saving, setSaving] = useState(false)
+  const contentRef = useRef(null)
 
   const resolve = (config) => (config?.itemIds || []).map(id => itemsById[id]).filter(Boolean)
 
@@ -49,6 +50,7 @@ export default function OrderScreen({ menu, kid }) {
     setSaving(true)
     try {
       await upsertOrder(menu.id, kid.id, kid.name, sel)
+      contentRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
     } finally {
       setSaving(false)
     }
@@ -59,7 +61,13 @@ export default function OrderScreen({ menu, kid }) {
       <header className="app-header kid-header" style={{ background: kid.color }}>
         <h1>{MEAL_TYPE_LABELS[menu.mealType]}</h1>
       </header>
-      <main className="app-content view-padded">
+      <main className="app-content view-padded" ref={contentRef}>
+        {existing && (
+          <div className="order-confirm-banner">
+            <div className="order-confirm-title">✅ Order received!</div>
+            <div className="order-confirm-sub">You can still update your order until time runs out.</div>
+          </div>
+        )}
         <CountdownTimer closeAt={menu.closeAt} size="large" />
 
         <SectionPicker
@@ -105,7 +113,6 @@ export default function OrderScreen({ menu, kid }) {
         <button type="button" className="btn-primary btn-submit" disabled={!canSubmit} onClick={handleSubmit}>
           {existing ? 'Update Order' : 'Submit Order'}
         </button>
-        {existing && <p className="empty-note">You can change your order until time runs out.</p>}
       </main>
     </div>
   )

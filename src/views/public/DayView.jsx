@@ -1,7 +1,7 @@
 import { Link, useParams } from 'react-router-dom'
 import { useMealHistoryPublic } from '../../hooks/useMealHistoryPublic'
 import HistoryNav from '../../components/HistoryNav'
-import HistoryEntryCard from '../../components/HistoryEntryCard'
+import MealSummaryCard from '../../components/MealSummaryCard'
 import { formatDateLong } from '../../utils/date'
 
 export default function DayView() {
@@ -16,7 +16,7 @@ export default function DayView() {
       <main className="app-content view-padded">
         {loading && <p className="empty-note">Loading&hellip;</p>}
         {!loading && entries.length === 0 && <p className="empty-note">No meals recorded for this day.</p>}
-        {entries.map(entry => <HistoryEntryCard key={entry.id} entry={entry} />)}
+        {entries.map(entry => <MealSummaryCard key={entry.id} entry={entry} />)}
         <Link to="/history/calendar" className="btn-ghost btn-sm">← Back to calendar</Link>
       </main>
     </div>

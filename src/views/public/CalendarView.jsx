@@ -15,7 +15,7 @@ function MonthTile({ year, monthIdx, datesWithMeals, today }) {
 
   return (
     <div className="calendar-tile">
-      <h4>{MONTH_NAMES[monthIdx]}</h4>
+      <h4><Link to={`/history/month/${year}/${monthIdx + 1}`}>{MONTH_NAMES[monthIdx]}</Link></h4>
       <div className="calendar-tile-weekdays">
         {WEEKDAY_INITIALS.map((w, i) => <span key={i}>{w}</span>)}
       </div>

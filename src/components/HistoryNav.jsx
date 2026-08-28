@@ -4,7 +4,7 @@ export default function HistoryNav() {
   return (
     <div className="history-nav">
       <NavLink to="/history" end className={({ isActive }) => (isActive ? 'active' : '')}>
-        List
+        Recent
       </NavLink>
       <NavLink to="/history/calendar" className={({ isActive }) => (isActive ? 'active' : '')}>
         Calendar

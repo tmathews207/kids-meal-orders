@@ -186,6 +186,9 @@ export function DataProvider({ children }) {
   function saveParentNotes(menuId, notes) {
     return setDoc(doc(db, 'mealHistory', menuId), { parentNotes: notes }, { merge: true })
   }
+  function deleteMealHistoryEntry(menuId) {
+    return deleteDoc(doc(db, 'mealHistory', menuId))
+  }
 
   return (
     <DataContext.Provider
@@ -212,6 +215,7 @@ export function DataProvider({ children }) {
         saveMealPhoto,
         saveMealTip,
         saveParentNotes,
+        deleteMealHistoryEntry,
       }}
     >
       {children}

@@ -11,6 +11,8 @@ import KidApp from './views/kid/KidApp'
 import MonthListView from './views/public/MonthListView'
 import CalendarView from './views/public/CalendarView'
 import DayView from './views/public/DayView'
+import MonthDetailView from './views/public/MonthDetailView'
+import MealDetailView from './views/public/MealDetailView'
 
 function Spinner() {
   return (
@@ -90,7 +92,9 @@ export default function App() {
             <Route path="/history" element={<MonthListView />} />
             <Route path="/history/calendar" element={<CalendarView />} />
             <Route path="/history/calendar/:year" element={<CalendarView />} />
+            <Route path="/history/month/:year/:month" element={<MonthDetailView />} />
             <Route path="/history/day/:date" element={<DayView />} />
+            <Route path="/history/meal/:menuId" element={<MealDetailView />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </HashRouter>
