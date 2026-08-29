@@ -101,6 +101,9 @@ export function DataProvider({ children }) {
   function updateMenu(id, updates) {
     return updateDoc(doc(db, 'menus', id), updates)
   }
+  function deleteMenu(id) {
+    return deleteDoc(doc(db, 'menus', id))
+  }
   function openMenu(id, closeAt) {
     return updateMenu(id, { status: 'open', closeAt })
   }
@@ -215,6 +218,7 @@ export function DataProvider({ children }) {
         removeLibraryItem,
         createMenu,
         updateMenu,
+        deleteMenu,
         openMenu,
         closeMenuManually,
         markMenuReady,

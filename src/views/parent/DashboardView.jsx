@@ -11,10 +11,15 @@ const STATUS_LABEL = {
 }
 
 function MenuCard({ menu }) {
-  const { kids, orders, mealHistory, closeMenuManually, markMenuReady } = useData()
+  const { kids, orders, closeMenuManually, markMenuReady, deleteMenu } = useData()
   const status = getEffectiveStatus(menu)
   const menuOrders = orders.filter(o => o.menuId === menu.id)
-  const history = mealHistory.find(h => h.id === menu.id)
+
+  function handleDelete() {
+    if (confirm(`Remove this ${MEAL_TYPE_LABELS[menu.mealType] || menu.mealType} menu from the dashboard? This can't be undone.`)) {
+      deleteMenu(menu.id)
+    }
+  }
 
   return (
     <div className="card menu-dash-card">
@@ -29,7 +34,7 @@ function MenuCard({ menu }) {
         {kids.map(kid => {
           const order = menuOrders.find(o => o.kidId === kid.id)
           const doneEating = !!order?.doneEatingAt
-          const tipDone = !!history?.tips?.[kid.id]
+          const rated = !!order?.ratedAt
           return (
             <li key={kid.id}>
               <span className="kid-avatar kid-avatar-sm" style={{ background: kid.color }}>
@@ -39,8 +44,8 @@ function MenuCard({ menu }) {
               {status === 'open' && <span className={order ? 'tag-ok' : 'tag-pending'}>{order ? 'Order in' : 'Waiting…'}</span>}
               {status === 'closed' && <span className={order ? 'tag-ok' : 'tag-pending'}>{order ? 'Submitted' : 'No order'}</span>}
               {status === 'ready' && (
-                <span className={tipDone ? 'tag-ok' : doneEating ? 'tag-pending' : 'tag-pending'}>
-                  {tipDone ? 'Rated meal' : doneEating ? 'Eating done — rating…' : 'Eating'}
+                <span className={rated ? 'tag-ok' : 'tag-pending'}>
+                  {rated ? 'Rated meal' : doneEating ? 'Eating done — rating…' : 'Eating'}
                 </span>
               )}
             </li>
@@ -58,6 +63,9 @@ function MenuCard({ menu }) {
           Meal Ready 🍽️
         </button>
       )}
+      <button type="button" className="btn-ghost btn-sm btn-danger" onClick={handleDelete}>
+        Remove from Dashboard
+      </button>
     </div>
   )
 }
