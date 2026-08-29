@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from './context/AuthContext'
 import { KidAuthProvider, useKidAuth } from './context/KidAuthContext'
 import { DataProvider } from './context/DataContext'
 import { ParentLoginScreen, UnauthorizedScreen } from './components/AuthScreens'
+import ErrorBoundary from './components/ErrorBoundary'
 import RoleSelect from './views/RoleSelect'
 import ParentApp from './views/parent/ParentApp'
 import KidLoginScreen from './views/kid/KidLoginScreen'
@@ -82,23 +83,25 @@ function KidRoute() {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <KidAuthProvider>
-        <HashRouter>
-          <Routes>
-            <Route path="/" element={<RoleSelect />} />
-            <Route path="/parent" element={<ParentRoute />} />
-            <Route path="/kid" element={<KidRoute />} />
-            <Route path="/history" element={<MonthListView />} />
-            <Route path="/history/calendar" element={<CalendarView />} />
-            <Route path="/history/calendar/:year" element={<CalendarView />} />
-            <Route path="/history/month/:year/:month" element={<MonthDetailView />} />
-            <Route path="/history/day/:date" element={<DayView />} />
-            <Route path="/history/meal/:menuId" element={<MealDetailView />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </HashRouter>
-      </KidAuthProvider>
-    </AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <KidAuthProvider>
+          <HashRouter>
+            <Routes>
+              <Route path="/" element={<RoleSelect />} />
+              <Route path="/parent" element={<ParentRoute />} />
+              <Route path="/kid" element={<KidRoute />} />
+              <Route path="/history" element={<MonthListView />} />
+              <Route path="/history/calendar" element={<CalendarView />} />
+              <Route path="/history/calendar/:year" element={<CalendarView />} />
+              <Route path="/history/month/:year/:month" element={<MonthDetailView />} />
+              <Route path="/history/day/:date" element={<DayView />} />
+              <Route path="/history/meal/:menuId" element={<MealDetailView />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </HashRouter>
+        </KidAuthProvider>
+      </AuthProvider>
+    </ErrorBoundary>
   )
 }

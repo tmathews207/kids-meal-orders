@@ -13,6 +13,7 @@ export function todayISO(d = new Date()) {
 }
 
 export function formatDateLong(iso) {
+  if (!iso) return 'Unknown date'
   const [y, m, d] = iso.split('-').map(Number)
   return new Date(y, m - 1, d).toLocaleDateString(undefined, {
     weekday: 'long',
@@ -23,6 +24,7 @@ export function formatDateLong(iso) {
 }
 
 export function formatDateShort(iso) {
+  if (!iso) return 'Unknown date'
   const [y, m, d] = iso.split('-').map(Number)
   return new Date(y, m - 1, d).toLocaleDateString(undefined, {
     weekday: 'short',

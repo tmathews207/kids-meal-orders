@@ -34,26 +34,44 @@ function NotesField({ entry, saveParentNotes }) {
 export default function HistoryEditView() {
   const { mealHistory, saveParentNotes, saveMealPhoto, deleteMealHistoryEntry } = useData()
 
-  const sorted = [...mealHistory].sort((a, b) => toMillis(b.createdAt) - toMillis(a.createdAt))
+  const sorted = mealHistory
+    .filter(e => e.date)
+    .sort((a, b) => toMillis(b.createdAt) - toMillis(a.createdAt))
+  const broken = mealHistory.filter(e => !e.date)
 
   function handleDeleteEntry(entry) {
-    if (confirm(`Delete this ${MEAL_TYPE_LABELS[entry.mealType] || entry.mealType} entry from history? This can't be undone.`)) {
+    const label = MEAL_TYPE_LABELS[entry.mealType] || entry.mealType || 'meal'
+    if (confirm(`Delete this ${label} entry from history? This can't be undone.`)) {
       deleteMealHistoryEntry(entry.id)
     }
-  }
-
-  if (sorted.length === 0) {
-    return (
-      <div className="view-padded">
-        <Link to="/history" className="btn-ghost btn-sm">View Public History →</Link>
-        <p className="empty-note">No served meals yet.</p>
-      </div>
-    )
   }
 
   return (
     <div className="view-padded">
       <Link to="/history" className="btn-ghost btn-sm">View Public History →</Link>
+
+      {broken.length > 0 && (
+        <div className="card history-entry">
+          <h3>Broken entries</h3>
+          <p className="empty-note">
+            These got created without a date (usually because a kid rated a meal after its history entry was
+            deleted) and won&apos;t show up anywhere else. Safe to delete.
+          </p>
+          {broken.map(entry => (
+            <button
+              key={entry.id}
+              type="button"
+              className="btn-ghost btn-sm btn-danger"
+              onClick={() => handleDeleteEntry(entry)}
+            >
+              Delete broken entry ({entry.id})
+            </button>
+          ))}
+        </div>
+      )}
+
+      {sorted.length === 0 && <p className="empty-note">No served meals yet.</p>}
+
       {sorted.map(entry => (
         <div key={entry.id} className="card history-entry">
           <div className="history-entry-head">

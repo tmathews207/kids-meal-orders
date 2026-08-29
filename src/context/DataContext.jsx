@@ -180,17 +180,26 @@ export function DataProvider({ children }) {
   }
 
   // ---- meal history ----
+  // If a parent deletes a history entry after a menu was marked ready but
+  // before a kid rates it, saveMealPhoto/saveMealTip would otherwise
+  // recreate the doc with ONLY the photo/tip field -- missing date/mealType
+  // and crashing anything that renders it. Always carry the menu's
+  // identifying fields along so a recreated doc is always complete.
+  function historyBaseFields(menuId) {
+    const menu = stateRef.current.menus.find(m => m.id === menuId)
+    return menu ? { menuId, date: menu.date, mealType: menu.mealType } : { menuId }
+  }
   function saveMealPhoto(menuId, kidId, photo) {
     return setDoc(
       doc(db, 'mealHistory', menuId),
-      { photos: { [kidId]: photo } },
+      { ...historyBaseFields(menuId), photos: { [kidId]: photo } },
       { merge: true }
     )
   }
   function saveMealTip(menuId, kidId, tip) {
     return setDoc(
       doc(db, 'mealHistory', menuId),
-      { tips: { [kidId]: tip } },
+      { ...historyBaseFields(menuId), tips: { [kidId]: tip } },
       { merge: true }
     )
   }

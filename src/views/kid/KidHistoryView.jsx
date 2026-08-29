@@ -4,7 +4,9 @@ import { toMillis } from '../../utils/date'
 
 export default function KidHistoryView({ kid }) {
   const { mealHistory } = useData()
-  const sorted = [...mealHistory].sort((a, b) => toMillis(b.createdAt) - toMillis(a.createdAt))
+  const sorted = mealHistory
+    .filter(e => e.date)
+    .sort((a, b) => toMillis(b.createdAt) - toMillis(a.createdAt))
 
   return (
     <div className="app">
