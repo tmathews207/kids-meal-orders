@@ -1,5 +1,7 @@
+import { useMemo } from 'react'
 import { useData } from '../../context/DataContext'
 import CountdownTimer from '../../components/CountdownTimer'
+import OrderSummary from '../../components/OrderSummary'
 import { getEffectiveStatus } from '../../utils/mealStatus'
 import { MEAL_TYPE_LABELS } from '../../utils/constants'
 import { formatDateShort } from '../../utils/date'
@@ -11,7 +13,8 @@ const STATUS_LABEL = {
 }
 
 function MenuCard({ menu }) {
-  const { kids, orders, closeMenuManually, markMenuReady, deleteMenu } = useData()
+  const { kids, orders, libraryItems, closeMenuManually, markMenuReady, deleteMenu } = useData()
+  const itemsById = useMemo(() => Object.fromEntries(libraryItems.map(i => [i.id, i])), [libraryItems])
   const status = getEffectiveStatus(menu)
   const menuOrders = orders.filter(o => o.menuId === menu.id)
 
@@ -37,16 +40,23 @@ function MenuCard({ menu }) {
           const rated = !!order?.ratedAt
           return (
             <li key={kid.id}>
-              <span className="kid-avatar kid-avatar-sm" style={{ background: kid.color }}>
-                {kid.name.slice(0, 1).toUpperCase()}
-              </span>
-              <span>{kid.name}</span>
-              {status === 'open' && <span className={order ? 'tag-ok' : 'tag-pending'}>{order ? 'Order in' : 'Waiting…'}</span>}
-              {status === 'closed' && <span className={order ? 'tag-ok' : 'tag-pending'}>{order ? 'Submitted' : 'No order'}</span>}
-              {status === 'ready' && (
-                <span className={rated ? 'tag-ok' : 'tag-pending'}>
-                  {rated ? 'Rated meal' : doneEating ? 'Eating done — rating…' : 'Eating'}
+              <div className="kid-status-row">
+                <span className="kid-avatar kid-avatar-sm" style={{ background: kid.color }}>
+                  {kid.name.slice(0, 1).toUpperCase()}
                 </span>
+                <span>{kid.name}</span>
+                {status === 'open' && <span className={order ? 'tag-ok' : 'tag-pending'}>{order ? 'Order in' : 'Waiting…'}</span>}
+                {status === 'closed' && <span className={order ? 'tag-ok' : 'tag-pending'}>{order ? 'Submitted' : 'No order'}</span>}
+                {status === 'ready' && (
+                  <span className={rated ? 'tag-ok' : 'tag-pending'}>
+                    {rated ? 'Rated meal' : doneEating ? 'Eating done — rating…' : 'Eating'}
+                  </span>
+                )}
+              </div>
+              {order && (
+                <div className="kid-order-detail">
+                  <OrderSummary order={order} itemsById={itemsById} />
+                </div>
               )}
             </li>
           )

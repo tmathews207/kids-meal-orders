@@ -405,9 +405,12 @@ a { color: inherit; text-decoration: none; }
 .status-open { background: var(--orange-bg); color: var(--orange); }
 .status-closed { background: #EDE7E0; color: var(--text-secondary); }
 .status-ready { background: #E4F5EB; color: var(--green); }
-.kid-status-list { display: flex; flex-direction: column; gap: 6px; list-style: none; }
-.kid-status-list li { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; }
-.kid-status-list li > span:nth-child(2) { flex: 1; }
+.kid-status-list { display: flex; flex-direction: column; gap: 10px; list-style: none; }
+.kid-status-list li { display: flex; flex-direction: column; gap: 4px; }
+.kid-status-row { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; }
+.kid-status-row > span:nth-child(2) { flex: 1; }
+.kid-order-detail { padding: 6px 8px 2px 34px; border-left: 2px solid var(--border); margin-left: 12px; }
+.kid-order-detail .order-summary { font-size: 0.8rem; }
 .tag-ok { font-size: 0.72rem; font-weight: 700; color: var(--green); background: #E4F5EB; padding: 3px 8px; border-radius: 99px; }
 .tag-pending { font-size: 0.72rem; font-weight: 600; color: var(--text-secondary); background: var(--bg); padding: 3px 8px; border-radius: 99px; }
 
