@@ -167,6 +167,14 @@ export function DataProvider({ children }) {
       doneEatingAt: serverTimestamp(),
     })
   }
+  // Marks this order as rated (photo/tip submitted) so it's permanently
+  // "finished" for pickActiveMenuForKid, independent of the mealHistory
+  // archive -- deleting a history entry must not un-finish a meal.
+  function markOrderRated(menuId, kidId) {
+    return updateDoc(doc(db, 'orders', `${menuId}_${kidId}`), {
+      ratedAt: serverTimestamp(),
+    })
+  }
 
   // ---- meal history ----
   function saveMealPhoto(menuId, kidId, photo) {
@@ -212,6 +220,7 @@ export function DataProvider({ children }) {
         markMenuReady,
         upsertOrder,
         markDoneEating,
+        markOrderRated,
         saveMealPhoto,
         saveMealTip,
         saveParentNotes,

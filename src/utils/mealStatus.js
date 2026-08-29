@@ -14,16 +14,21 @@ export function getEffectiveStatus(menu, now = Date.now()) {
 
 // Picks the menu a kid's app should currently show: the most recent menu
 // that's open/closed/ready and that this kid hasn't already finished
-// (submitted a tip for). Falls back to null ("no active meal").
-export function pickActiveMenuForKid(menus, kidId, historyByMenuId) {
+// (rated). Falls back to null ("no active meal").
+//
+// "Finished" is tracked on the kid's own order (`ratedAt`), not on the
+// mealHistory archive -- a parent deleting a history entry (e.g. to
+// remove a test entry, or a bad photo) must never resurrect an old menu
+// as the kid's active screen.
+export function pickActiveMenuForKid(menus, kidId, ordersByMenuId) {
   const candidates = menus
     .map(menu => ({ menu, status: getEffectiveStatus(menu) }))
     .filter(({ status }) => status === 'open' || status === 'closed' || status === 'ready')
     .sort((a, b) => toMillis(b.menu.closeAt) - toMillis(a.menu.closeAt))
 
   for (const { menu, status } of candidates) {
-    const history = historyByMenuId[menu.id]
-    const finished = status === 'ready' && history?.tips?.[kidId]
+    const order = ordersByMenuId[menu.id]
+    const finished = status === 'ready' && order?.ratedAt
     if (!finished) return menu
   }
   return null

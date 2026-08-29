@@ -5,7 +5,7 @@ import TipSelector from '../../components/TipSelector'
 import { CLOUDINARY_MEAL_FOLDER } from '../../cloudinaryConfig'
 
 export default function PhotoTipScreen({ menu, kid }) {
-  const { saveMealPhoto, saveMealTip } = useData()
+  const { saveMealPhoto, saveMealTip, markOrderRated } = useData()
   const [photo, setPhoto] = useState(null)
   const [tip, setTip] = useState(null)
   const [saving, setSaving] = useState(false)
@@ -16,6 +16,7 @@ export default function PhotoTipScreen({ menu, kid }) {
     try {
       if (photo) await saveMealPhoto(menu.id, kid.id, { ...photo, uploadedAt: new Date().toISOString() })
       await saveMealTip(menu.id, kid.id, { type: 'percent', value: tip })
+      await markOrderRated(menu.id, kid.id)
     } finally {
       setSaving(false)
     }

@@ -8,12 +8,15 @@ import PhotoTipScreen from './PhotoTipScreen'
 import KidHistoryView from './KidHistoryView'
 
 export default function KidApp() {
-  const { kids, menus, orders, mealHistory, loading } = useData()
+  const { kids, menus, orders, loading } = useData()
   const { kidId, logOutKid } = useKidAuth()
 
   const kid = kids.find(k => k.id === kidId)
-  const historyByMenuId = useMemo(() => Object.fromEntries(mealHistory.map(h => [h.id, h])), [mealHistory])
-  const menu = kid ? pickActiveMenuForKid(menus, kid.id, historyByMenuId) : null
+  const ordersByMenuId = useMemo(
+    () => Object.fromEntries(orders.filter(o => o.kidId === kidId).map(o => [o.menuId, o])),
+    [orders, kidId]
+  )
+  const menu = kid ? pickActiveMenuForKid(menus, kid.id, ordersByMenuId) : null
 
   if (loading) {
     return (
